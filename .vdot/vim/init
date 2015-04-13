@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function ycm() {
+  echo "Compling YouCompleteMe ..."
+  cd bundles/YouCompleteMe
+  git submodule update --init --recursive
+  ./install.sh --clang-completer
+  cd ../..
+  echo "Done."
+}
+
+function tern() {
+  echo "Install tern_for_vim dependencies..."
+  cd bundles/tern_for_vim
+  npm install
+  cd ../..
+  echo "Done."
+}
+
+function print_help_info() {
+  echo "Available commands:"
+  echo "  ycm   - Compile YouCompleteMe"
+  echo "  tern  - Install tern_for_vim"
+}
+
+case "$1" in
+  "ycm") ycm ;;
+  "tern") tern ;;
+  *) print_help_info ;;
+esac

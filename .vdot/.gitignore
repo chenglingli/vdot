@@ -1,0 +1,10 @@
+# temp files
+.DS_Store*
+*.pyc
+
+# zsh
+/zsh/env.zsh
+/zsh/local.zsh
+
+# vim
+.netrwhist

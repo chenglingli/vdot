@@ -1,0 +1,75 @@
+#!/bin/bash
+
+function init() {
+  link
+  vim
+}
+
+function link() {
+  echo "Creating symbolic links..."
+  ln -sfn .vdot/zsh/zshrc ~/.zshrc
+  ln -sfn .vdot/vim/vimrc ~/.vimrc
+  ln -sfn .vdot/git/gitconfig ~/.gitconfig
+  if [[ "$(tmux -V)" == *1.9* ]]; then
+    ln -sfn .vdot/tmux/tmux.conf ~/.tmux.conf
+  else
+    ln -sfn .vdot/tmux/tmux.conf.legacy ~/.tmux.conf
+  fi
+}
+
+function env_coding() {
+  echo "Setting env to coding..."
+  echo "V_ENV=\"coding\"" > ~/.vdot/zsh/env.zsh
+}
+
+function env_eleme() {
+  echo "Setting env to eleme..."
+  echo "V_ENV=\"eleme\"" > ~/.vdot/zsh/env.zsh
+}
+
+function vim() {
+  echo "Initializing vim neobundle..."
+  VIM_BUNDLES="vim/bundles"
+
+  NEOBUNDLE="$VIM_BUNDLES/neobundle.vim"
+  if [[ ! -e "$NEOBUNDLE" ]]; then
+    git clone https://github.com/Shougo/neobundle.vim $NEOBUNDLE
+  else
+    cd $NEOBUNDLE
+    git pull
+    cd -
+  fi
+
+  VIMPROC="$VIM_BUNDLES/vimproc.vim"
+  if [[ ! -e "$VIMPROC" ]]; then
+    git clone https://github.com/Shougo/vimproc.vim $VIMPROC
+  else
+    cd $VIMPROC
+    git pull
+    cd -
+  fi
+
+  cd $VIMPROC
+  make clean
+  make
+  cd -
+  echo "Done. Run vim to install other plugins."
+}
+
+function print_help_info() {
+  echo "Available commands:"
+  echo "  init       - Run link & vim"
+  echo "  link       - Create dotfile symbolic links"
+  echo "  vim        - Initialize vim neobundle"
+  echo "  env_coding - Set env to coding"
+  echo "  env_eleme  - Set env to eleme"
+}
+
+case "$1" in
+  "init") init ;;
+  "link") link ;;
+  "vim") vim ;;
+  "env_coding") env_coding ;;
+  "env_eleme") env_eleme ;;
+  *) print_help_info ;;
+esac

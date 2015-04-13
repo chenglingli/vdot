@@ -1,0 +1,52 @@
+#######
+# Z-Shell Startup Script
+###
+
+# V environment variables
+V_ROOT="$HOME/.vdot"
+V_CACHE="$HOME/.cache"
+
+# Set zsh path
+ZSH_ROOT="$V_ROOT/zsh"
+ZSH_CACHE="$V_CACHE/zsh"
+
+# Initialization
+source "$ZSH_ROOT/common/initialize.zsh"
+
+# Common components
+v_source_dir "common" \
+  "interface" \
+  "completion" \
+  "git_status" \
+  "alias"
+
+# Detect OS
+V_OS="unknown"
+case "$(uname -s)" in
+  "Darwin") V_OS="mac" ;;
+  "Linux") V_OS="linux" ;;
+  *)
+    if [[ "$(uname -o)" == "Cygwin" ]]; then
+      V_OS="cygwin"
+    else
+      echo "ERROR: OS not supported."
+    fi ;;
+esac
+v_source "spec/os/$V_OS"
+
+# Detect environment
+V_ENV="normal"
+v_source "env"
+v_source "spec/env/$V_ENV"
+export VDOT_ENV=$V_ENV
+
+# Detect hostname
+V_HOST="$(hostname)"
+v_source "spec/host/$V_HOST"
+
+# Local script
+v_source "local"
+
+# Clean variables
+unset ZSH_ROOT ZSH_CACHE \
+    V_ROOT V_CACHE V_OS V_ENV V_HOST

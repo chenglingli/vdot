@@ -1,0 +1,31 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM Configuration file
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Be improved
+set nocompatible
+
+" VIM env
+let g:VIMENV = $VDOT_ENV
+
+" VIM Env & Paths
+let g:VIMPATH_RUNTIME = $HOME.'/.vdot/vim'
+let g:VIMPATH_CACHE = $HOME.'/.cache/vim'
+
+" Configuration filenames (ordered)
+let s:configs = [
+  \   'initialize',
+  \   'environment',
+  \   'interface',
+  \   'key_mappings',
+  \   'filetypes',
+  \   'functions',
+  \   'plugins',
+  \   'plugins_conf',
+  \ ]
+
+" Start loading
+let s:dir_configs = g:VIMPATH_RUNTIME.'/configs'
+for s:config in s:configs
+  execute 'source '.s:dir_configs.'/'.s:config.'.vim'
+endfor
